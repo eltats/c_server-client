@@ -1,9 +1,13 @@
 #include "client.h"
 
 int main() {
-    int                sd, res;
+    int sd, res;
+#ifdef __linux__
     struct sockaddr_un serveraddr = {AF_UNIX, DEF_SERVER_PATH};
-    u_int32_t          pid, num;
+#elif __APPLE__
+    struct sockaddr_un serveraddr = {sizeof(DEF_SERVER_PATH) - 1, AF_UNIX, DEF_SERVER_PATH};
+#endif
+    u_int32_t pid, num;
 
     sd = socket(AF_UNIX, SOCK_STREAM, 0);
     hand_err(sd, "socket()");

@@ -8,13 +8,17 @@
 // дочерних процессах или потоках. Есть еще poll() и epoll() но в рамках тестового не имеет смысла.
 // Но прочитал про все :)
 int main() {
+#ifdef __linux__
     struct sockaddr_un saddr = {AF_UNIX, DEF_SERVER_PATH};
-    int                fd_server;                          // server socket descriptor
-    int                fd_clients[DEF_MAX_CLIENTS] = {0};  // client socket descriptors
-    int                avail_clients = DEF_MAX_CLIENTS;
-    fd_set             fds_tmp;  // select() set
-    int                fds_max;  // select() maxfd
-    int                res;
+#elif __APPLE__
+    struct sockaddr_un saddr = {sizeof(DEF_SERVER_PATH) - 1, AF_UNIX, DEF_SERVER_PATH};
+#endif
+    int    fd_server;                          // server socket descriptor
+    int    fd_clients[DEF_MAX_CLIENTS] = {0};  // client socket descriptors
+    int    avail_clients = DEF_MAX_CLIENTS;
+    fd_set fds_tmp;  // select() set
+    int    fds_max;  // select() maxfd
+    int    res;
 
     fd_server = socket(AF_UNIX, SOCK_STREAM, 0);
     hand_err(fd_server, "socket()");
