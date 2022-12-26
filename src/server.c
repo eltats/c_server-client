@@ -127,8 +127,8 @@ void fdsel_reinit(fd_set *fds, int *fds_max, int fd_server, int fd_clients[]) {
         // if valid socket descriptor then add to read list 
         if (fd_clients[i]) {
             FD_SET(fd_clients[i], fds);
+            fdsel_update_maxfd(fds_max, fd_clients[i]);
         }
-        fdsel_update_maxfd(fds_max, fd_clients[i]);
     }
 }
 
